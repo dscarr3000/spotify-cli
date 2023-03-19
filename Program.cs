@@ -36,6 +36,40 @@ public class Program
                     break;
             }
         }
+
+        //var devices = await spotify.Player.GetAvailableDevices();
+        //foreach (var device in devices.Devices)
+        //{
+        //    Console.WriteLine(device.Name);
+        //}
+        ////var iphoneID = devices.Devices[0].Id;
+        ////await spotify.Player.TransferPlayback(new PlayerTransferPlaybackRequest(new List<string> { iphoneID }));
+        //await spotify.Player.PausePlayback();
+
+
+        //await foreach (var playlist in spotify.Paginate(await spotify.Playlists.CurrentUsers()))
+        //{
+        //    Console.WriteLine(playlist.Name);
+        //    var actualPlaylist = await spotify.Playlists.Get(playlist.Id);
+        //    foreach (PlaylistTrack<IPlayableItem> item in actualPlaylist.Tracks!.Items!)
+        //    {
+        //        if (item.Track is FullTrack track)
+        //        {
+        //            Console.WriteLine($"\t{track.Name}");
+        //        }
+        //        else if (item.Track is FullEpisode episode)
+        //        {
+        //            Console.WriteLine($"\t{episode.Name}");
+        //        }
+        //    }
+        //}
+
+        //var me = await spotify.UserProfile.Current();
+        //Console.WriteLine($"Welcome {me.DisplayName} ({me.Id}), you're authenticated!");
+
+        //var playlists = await spotify.PaginateAll(await spotify.Playlists.CurrentUsers().ConfigureAwait(false));
+        //Console.WriteLine($"Total Playlists in your Account: {playlists.Count}");
+
         return 0;
     }
 
