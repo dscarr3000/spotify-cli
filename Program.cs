@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
+using static SpotifyAPI.Web.PlayerSetRepeatRequest;
 using static SpotifyAPI.Web.Scopes;
 
 namespace SpotifyCLI;
@@ -11,18 +12,36 @@ public class Program
     private static readonly string clientId = "5457209de7cf433299a3755e95d8ab47";
     private static readonly EmbedIOAuthServer _server = new(new Uri("http://localhost:3000/callback"), 3000);
 
-    // private static void Exiting() => Console.CursorVisible = true;
     public static async Task<int> Main()
     {
         var spotify = await LoginAuthentication();
 
-        var me = await spotify.UserProfile.Current();
-        Console.WriteLine($"Welcome {me.DisplayName} ({me.Id}), you're authenticated!");
+        Console.WriteLine($"Logged in as {(await spotify.UserProfile.Current()).DisplayName}.");
 
-        var playlists = await spotify.PaginateAll(await spotify.Playlists.CurrentUsers().ConfigureAwait(false));
-        Console.WriteLine($"Total Playlists in your Account: {playlists.Count}");
-
+        var input = "";
+        while (input != "q" && input != "quit")
+        {
+            input = Console.ReadLine();
+            switch (input)
+            {
+                case "playlists":
+                    await foreach (var playlist in spotify.Paginate(await spotify.Playlists.CurrentUsers()))
+                        Console.WriteLine(playlist.Name);
+                    break;
+                case "q":
+                case "quit":
+                    break;
+                default:
+                    Console.WriteLine("Unknown Command");
+                    break;
+            }
+        }
         return 0;
+    }
+
+    private static void ListPlaylists()
+    {
+
     }
 
     private static async Task<SpotifyClient> LoginAuthentication()
@@ -60,7 +79,8 @@ public class Program
         {
             CodeChallenge = challenge,
             CodeChallengeMethod = "S256",
-            Scope = new List<string> { UserReadEmail, UserReadPrivate, PlaylistReadPrivate, PlaylistReadCollaborative }
+            Scope = new List<string> { UserReadEmail, UserReadPrivate, PlaylistReadPrivate, PlaylistReadCollaborative,
+                UserModifyPlaybackState, UserReadPlaybackState }
         };
 
         Uri uri = request.ToUri();
